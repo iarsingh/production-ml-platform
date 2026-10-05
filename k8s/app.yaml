@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: production-ml-platform
+  labels:
+    app: production-ml-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: production-ml-platform
+  template:
+    metadata:
+      labels:
+        app: production-ml-platform
+    spec:
+      containers:
+        - name: api
+          image: production-ml-platform:local
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /v1/readyz
+              port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: production-ml-platform
+spec:
+  selector:
+    app: production-ml-platform
+  ports:
+    - port: 80
+      targetPort: 8080

@@ -1,6 +1,8 @@
+from mlplat.ops import router as ops_router
 from fastapi import FastAPI, HTTPException
 from mlplat.pipeline import deploy_check, drift, promote, register, validate
 app = FastAPI(title="Production ML Platform")
+app.include_router(ops_router, prefix="/v1")
 
 @app.get("/healthz")
 def healthz():
